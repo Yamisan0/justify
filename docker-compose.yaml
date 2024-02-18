@@ -1,0 +1,14 @@
+version: '3'
+services:
+  app:
+    build:
+      context: . 
+      dockerfile: src/Dockerfile 
+    command: npm run start:dev  # Override the default command to enable hot reloading
+    volumes:
+      - .:/usr/src/app 
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development

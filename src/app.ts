@@ -1,17 +1,18 @@
-import http from "http";
-import dotenv from "dotenv";
+import http from 'http';
+import { parse } from 'url';
 
-dotenv.config();
+const requestListener: http.RequestListener = (req, res) => {
+  const { pathname } = parse(req.url || '', true);
 
-// Create a basic server
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "text/plain");
-  res.end("Hello, World!\n");
-});
+  if (pathname === '/api/resource' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'This is a GET request\n response' }));
+  } else {
+    res.writeHead(404);
+    res.end();
+  }
+};
 
-const PORT = process.env.NODE_PORT;
-
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}/`);
-});
+const server = http.createServer(requestListener);
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`Server is running on http://localhost:${PORT}`));

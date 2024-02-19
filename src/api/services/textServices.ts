@@ -1,16 +1,17 @@
 export const justifyTextService = (text: string): string => {
   if (text.length > 10000) {
-    return "Text too long"; //arbitrary limit
+    //arbitrary limit to avoid server overload
+    return "Text too long";
   }
 
-  const words = text.split(" ");
+  const words = text.split(" "); //splitting text into words
   let lines: string[] = [];
   let line = "";
   words.forEach((word) => {
     if (line.length + word.length <= 80) {
-      line += `${word} `;
+      line += `${word} `; //adding words to line until it reaches 80 characters
     } else {
-      lines.push(line.trim());
+      lines.push(line.trim()); //pushing line to lines array and starting a new line
       line = `${word} `;
     }
   });

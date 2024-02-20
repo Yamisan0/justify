@@ -7,6 +7,11 @@ export const justifyTextController = (
 ) => {
   let body = "";
 
+  if (req.headers.authorization) {
+    const token = req.headers.authorization.split(" ")[1];
+    if 
+  }
+
   req.on("data", (chunk) => {
     body += chunk.toString(); //converting buffer to string
   });

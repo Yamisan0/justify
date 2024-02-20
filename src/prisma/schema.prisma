@@ -15,5 +15,4 @@ model User{
   id              Int           @id @default(autoincrement())
   email           String        @unique
   dailyTokens     Int           @default(0)
-  password        String
 }

@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
-// import { config } from ../config.ts;
 
 const JWT_SECRET = process.env.JWT_SECRET || "secretagarder";
 

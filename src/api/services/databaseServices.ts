@@ -21,16 +21,19 @@ export class DataInteractionService {
   }
 
   static async updateUser(email: string, tokenLength: number) {
-    if (this.getUser(email) === null) {
+    const user = await this.getUser(email);
+    if (user === null) {
       return await this.createUser(email, tokenLength);
     }
+
+    console.log(user);
 
     return await prisma.user.update({
       where: {
         email: email,
       },
       data: {
-        dailyTokens: tokenLength,
+        dailyTokens: user.dailyTokens + tokenLength,
       },
     });
   }

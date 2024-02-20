@@ -1,4 +1,5 @@
 import { justifyTextService } from "../services/textServices";
+import { DataInteractionService } from "../services/databaseServices";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import * as http from "http";
@@ -10,6 +11,8 @@ export const justifyTextController = (
   res: http.ServerResponse
 ) => {
   let body = "";
+  let email = "";
+
 
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ");
@@ -21,7 +24,9 @@ export const justifyTextController = (
     }
 
     try {
-      jwt.verify(token[1], JWT_SECRET || "secretagarder"); // Verify the token
+      const decoded = jwt.verify(token[1], JWT_SECRET || "secretagarder"); // Verify the token
+      email = (decoded as { email: string }).email; // Extract the email by typeasserting the decoded token
+      // console.log(email);
     } catch (error) {
       res.writeHead(401);
       res.end(JSON.stringify({ message: "Invalid Token" }));
@@ -29,12 +34,15 @@ export const justifyTextController = (
     }
   }
 
+
   req.on("data", (chunk) => {
     body += chunk.toString(); //converting buffer to string
   });
 
   req.on("end", () => {
     const justified = justifyTextService(body);
+    console.log(email);
+    DataInteractionService.updateUser(email, justified.tokenLength);
 
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ justifiedText: justified.newText }));

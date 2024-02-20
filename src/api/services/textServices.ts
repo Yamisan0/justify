@@ -1,7 +1,10 @@
-export const justifyTextService = (text: string): string => {
+export const justifyTextService = (text: string): {newText: string , tokenLength: number} => {
   if (text.length > 10000) {
     //arbitrary limit to avoid server overload
-    return "Text too long";
+    return {
+      newText: "Text too long",
+      tokenLength: 0,
+    };
   }
 
   const words = text.split(" "); //splitting text into words
@@ -16,5 +19,9 @@ export const justifyTextService = (text: string): string => {
     }
   });
   lines.push(line.trim());
-  return lines.join("\n"); //returning justified text with line breaks between lines
+  const justified = lines.join("\n")
+  return {
+    newText: justified,
+    tokenLength: words.length,
+  } //returning justified text with line breaks between lines
 };

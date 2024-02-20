@@ -34,9 +34,9 @@ export const justifyTextController = (
   });
 
   req.on("end", () => {
-    const justifiedText = justifyTextService(body);
+    const justified = justifyTextService(body);
 
     res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({ justifiedText }));
+    res.end(JSON.stringify({ justifiedText: justified.newText }));
   });
 };

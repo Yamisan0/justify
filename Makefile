@@ -3,7 +3,6 @@ SHELL := /bin/bash
 
 .PHONY: up down
 
-
 up:
 	@echo "Running containers..."
 	docker compose up --build

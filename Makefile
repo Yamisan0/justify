@@ -3,11 +3,13 @@ SHELL := /bin/bash
 
 .PHONY: up down
 
-
 up:
 	@echo "Running containers..."
 	docker compose up --build
 
+setup:
+	@echo "Installing dependencies..."
+	npm install
 
 down:
 	@echo "Stopping containers..."

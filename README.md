@@ -42,7 +42,7 @@ If you want to use it locally, use this one: `http://localhost:3000'
 
 ## API Reference
 
-#### Get Token
+#### Authentication
 
 ```http
   POST /api/token
@@ -57,7 +57,7 @@ For example with curl:
 curl -X POST http://15.188.15.48:3000/api/token -H "Content-Type: application/json" -d '{"email": "user@example.com"}'
 ```
 
-#### Get item
+#### Justify Text
 
 ```http
   POST /api/justify

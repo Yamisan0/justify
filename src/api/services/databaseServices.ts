@@ -2,7 +2,13 @@ import { Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+/**
+ * This class provides methods for interacting with the database to perform operations related to user data.
+ */
 export class DataInteractionService {
+  /**
+   * Creates a new user in the database with the specified email and token length.
+   */
   static async createUser(email: string, tokenLength: number) {
     return await prisma.user.create({
       data: {
@@ -12,6 +18,9 @@ export class DataInteractionService {
     });
   }
 
+  /**
+   * Retrieves a user from the database based on the specified email.
+   */
   static async getUser(email: string) {
     return await prisma.user.findUnique({
       where: {
@@ -20,6 +29,21 @@ export class DataInteractionService {
     });
   }
 
+  /**
+   * Retrieves the number of daily tokens for the user with the specified email.
+   */
+  static async getTokens(email: string) {
+    const user = await this.getUser(email);
+    if (user === null) {
+      return 0;
+    }
+    return user.dailyTokens;
+  }
+
+  /**
+   * Updates the number of daily tokens for the user with the specified email.
+   * If the user does not exist, a new user will be created with the specified email and token length.
+   */
   static async updateUser(email: string, tokenLength: number) {
     const user = await this.getUser(email);
     if (user === null) {

@@ -6,13 +6,12 @@ import * as http from "http";
 
 dotenv.config();
 
-export const justifyTextController = (
+export const justifyTextController = async (
   req: http.IncomingMessage,
   res: http.ServerResponse
 ) => {
   let body = "";
   let email = "";
-
 
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ");
@@ -34,6 +33,13 @@ export const justifyTextController = (
     }
   }
 
+  const tokenLength = await DataInteractionService.getTokens(email);
+  const RATE_LIMIT = process.env.RATE_LIMIT || 80000;
+  if (tokenLength > Number(RATE_LIMIT)) {
+    res.writeHead(402);
+    res.end(JSON.stringify({ message: "Payment Required" }));
+    return;
+  }
 
   req.on("data", (chunk) => {
     body += chunk.toString(); //converting buffer to string
@@ -41,7 +47,6 @@ export const justifyTextController = (
 
   req.on("end", () => {
     const justified = justifyTextService(body);
-    console.log(email);
     DataInteractionService.updateUser(email, justified.tokenLength);
 
     res.writeHead(200, { "Content-Type": "application/json" });

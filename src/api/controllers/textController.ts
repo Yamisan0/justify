@@ -46,10 +46,10 @@ export const justifyTextController = async (
   });
 
   req.on("end", () => {
-    const justified = justifyTextService(body);
+    const justified = justifyTextService(body, 80);
     DataInteractionService.updateUser(email, justified.tokenLength);
 
-    res.writeHead(200, { "Content-Type": "application/json" });
+    res.writeHead(200, { "Content-Type": "text/plain" });
     res.end(JSON.stringify({ justifiedText: justified.newText }));
   });
 };

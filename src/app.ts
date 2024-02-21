@@ -1,4 +1,6 @@
 import http, { IncomingMessage, ServerResponse } from "http";
+import { DataInteractionService } from "./api/services/databaseServices";
+import cron from "node-cron";
 import dotenv from "dotenv";
 
 // Assuming these are implemented elsewhere in your project
@@ -18,7 +20,19 @@ const requestListener = (req: IncomingMessage, res: ServerResponse) => {
   }
 };
 
-const PORT = process.env.PORT || 3000; // Updated to use PORT instead of NODE_PORT for convention
+cron.schedule(
+  "0 0 * * *",
+  async () => {
+    await DataInteractionService.resetDailyCounter();
+    console.log("Reset daily counter task executed.");
+  },
+  {
+    scheduled: true,
+    timezone: "Europe/Paris",
+  }
+);
+
+const PORT = process.env.NODE_PORT || 3000; // Updated to use PORT instead of NODE_PORT for convention
 
 const server = http.createServer(requestListener);
 

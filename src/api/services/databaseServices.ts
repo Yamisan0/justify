@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import cron from "node-cron";
 
 const prisma = new PrismaClient();
 
@@ -6,6 +7,17 @@ const prisma = new PrismaClient();
  * This class provides methods for interacting with the database to perform operations related to user data.
  */
 export class DataInteractionService {
+  static async resetDailyCounter() {
+    await prisma.user.updateMany({
+      data: {
+        dailyTokens: 0,
+      },
+    });
+    const users = await prisma.user.findMany();
+    console.log(users);
+    console.log("Daily counter reset successfully.");
+  }
+
   /**
    * Creates a new user in the database with the specified email and token length.
    */
@@ -49,8 +61,6 @@ export class DataInteractionService {
     if (user === null) {
       return await this.createUser(email, tokenLength);
     }
-
-    console.log(user);
 
     return await prisma.user.update({
       where: {

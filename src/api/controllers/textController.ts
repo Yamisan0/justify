@@ -6,6 +6,9 @@ import * as http from "http";
 
 dotenv.config();
 
+/**
+ * Handles the request to justify text.
+ */
 export const justifyTextController = async (
   req: http.IncomingMessage,
   res: http.ServerResponse
@@ -25,7 +28,6 @@ export const justifyTextController = async (
     try {
       const decoded = jwt.verify(token[1], JWT_SECRET || "secretagarder"); // Verify the token
       email = (decoded as { email: string }).email; // Extract the email by typeasserting the decoded token
-      // console.log(email);
     } catch (error) {
       res.writeHead(401);
       res.end(JSON.stringify({ message: "Invalid Token" }));
@@ -33,9 +35,10 @@ export const justifyTextController = async (
     }
   }
 
-  const tokenLength = await DataInteractionService.getTokens(email);
+  const tokenLength = await DataInteractionService.getTokens(email); // Get the number of tokens for the user
   const RATE_LIMIT = process.env.RATE_LIMIT || 80000;
   if (tokenLength > Number(RATE_LIMIT)) {
+    // Check if the user has exceeded the daily token limit
     res.writeHead(402);
     res.end(JSON.stringify({ message: "Payment Required" }));
     return;
@@ -47,7 +50,7 @@ export const justifyTextController = async (
 
   req.on("end", () => {
     const justified = justifyTextService(body, 80);
-    DataInteractionService.updateUser(email, justified.tokenLength);
+    DataInteractionService.updateUser(email, justified.tokenLength); // Update the number of tokens for the user
 
     res.writeHead(200, { "Content-Type": "text/plain" });
     res.end(JSON.stringify({ justifiedText: justified.newText }));

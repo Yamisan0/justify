@@ -8,10 +8,10 @@ RUN npm install
 
 RUN npm install -g nodemon
 
-# generates the prisma client at build time
-RUN npx prisma generate --schema=./src/prisma/schema.prisma 
-
 COPY . .
+
+# generates the prisma client at build time
+RUN npx prisma generate --schema=./src/prisma/schema.prisma
 
 EXPOSE 3000
 

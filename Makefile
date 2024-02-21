@@ -8,6 +8,11 @@ up:
 	docker compose up --build
 
 
+setup:
+	@echo "Installing dependencies..."
+	npm install
+
+
 down:
 	@echo "Stopping containers..."
 	docker compose down

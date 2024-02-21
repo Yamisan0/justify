@@ -1,25 +1,6 @@
 import { IncomingMessage, ServerResponse } from "http";
 import TokenService from "../services/tokenServices";
-
-/**
- * Parses the request body of an IncomingMessage object and returns it as a Promise.
- */
-const parseRequestBody = (req: IncomingMessage): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    let body = "";
-    req.on("data", (chunk) => {
-      body += chunk.toString(); // Convert binary data to string and append it
-    });
-    req.on("end", () => {
-      try {
-        resolve(JSON.parse(body)); // Attempt to parse the accumulated string as JSON
-      } catch (error) {
-        reject(error);
-      }
-    });
-  });
-};
-
+import { parseRequestBody } from "../utils/ParseRequestBody";
 /**
  * Generates a token based on the email provided in the request body.
  */

@@ -33,6 +33,17 @@ export const justifyTextController = async (
       res.end(JSON.stringify({ message: "Invalid Token" }));
       return;
     }
+  } else if (!req.headers.authorization) {
+    res.writeHead(401);
+    res.end(JSON.stringify({ message: "Unauthorized" }));
+    return;
+  }
+
+  const contentType = req.headers["content-type"];
+  if (!contentType || !contentType.includes("text/plain")) {
+    res.writeHead(400);
+    res.end(JSON.stringify({ message: "Invalid Content-Type" }));
+    return;
   }
 
   const tokenLength = await DataInteractionService.getTokens(email); // Get the number of tokens for the user

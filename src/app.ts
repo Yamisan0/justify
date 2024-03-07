@@ -43,3 +43,5 @@ const server = http.createServer(requestListener);
 server.listen(PORT, () =>
   console.log(`Server running on http://localhost:${PORT}`)
 );
+
+export { server }
